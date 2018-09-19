@@ -13,6 +13,7 @@ Since there is no Linux build available (http://daid.github.io/EmptyEpsilon/#tab
 ```
 docker run --rm -ti \
   -v $HOME/.Xauthority:/root/.Xauthority \
+  --volume=/$XDG_RUNTIME_DIR/pulse:/run/user/1000/pulse \
   --network=host \
   aequitas/empty-epsilon
 ```
@@ -22,6 +23,7 @@ By default it will run in non-fullscreen mode. Configuration options can be pass
 ```
 docker run --rm -ti \
   -v $HOME/.Xauthority:/root/.Xauthority \
+  --volume=$XDG_RUNTIME_DIR/pulse:/run/user/1000/pulse \
   --network=host \
   aequitas/empty-epsilon fullscreen=1
 ```

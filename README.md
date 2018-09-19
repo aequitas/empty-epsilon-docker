@@ -1,11 +1,14 @@
+# [Empty Epsilon](http://daid.github.io/EmptyEpsilon/) for Linux as Docker container.
+
 Since there is no Linux build available (http://daid.github.io/EmptyEpsilon/#tabs=5) and the build instructions can be bothersome (https://github.com/daid/EmptyEpsilon/wiki/Build-from-sources) if you just want a quick game.
 
-# Requirements:
+## Requirements:
 
 - Linux (tested on Ubuntu 18.04)
+- X11
 - Docker
 
-# Run
+## Run
 
 ```
 docker run --rm -ti \

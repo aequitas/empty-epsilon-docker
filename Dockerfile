@@ -28,6 +28,7 @@ RUN apt-get update
 RUN apt-get install -yqq libsfml-dev libglu1-mesa
 
 ENV DISPLAY :0
+ENV PULSE_SERVER=unix:/run/user/1000/pulse/native
 
 ENTRYPOINT ["/usr/local/bin/EmptyEpsilon"]
 CMD ["fullscreen=0"]

@@ -1,4 +1,4 @@
-FROM debian:9
+FROM debian:9 as build
 # https://github.com/daid/EmptyEpsilon/wiki/Build-from-sources
 
 RUN apt-get update
@@ -8,20 +8,25 @@ RUN apt-get install -yqq git build-essential libx11-dev cmake \
   libopenal-dev libsndfile1-dev libxcb1-dev \
   libxcb-image0-dev libsfml-dev
 
-RUN mkdir -p emptyepsilon
-WORKDIR emptyepsilon
-
 RUN git clone https://github.com/daid/SeriousProton.git
-
 RUN git clone https://github.com/daid/EmptyEpsilon.git
-WORKDIR EmptyEpsilon
 
-RUN mkdir -p _build
-WORKDIR _build
-RUN cmake .. -DSERIOUS_PROTON_DIR=/emptyepsilon/SeriousProton/
+RUN mkdir -p /EmptyEpsilon/_build
+WORKDIR /EmptyEpsilon/_build/
+RUN cmake .. -DSERIOUS_PROTON_DIR=/SeriousProton/
 RUN make
 RUN make install
-WORKDIR /
+
+# use clean image to not take build sources to final image
+FROM debian:9
+
+COPY --from=build /usr/local/bin/EmptyEpsilon /usr/local/bin/
+COPY --from=build /usr/local/share/emptyepsilon/ /usr/local/share/emptyepsilon/
+
+# libsfml-dev conveniently install most runtime requirements
+RUN apt-get update
+RUN apt-get install -yqq libsfml-dev libglu1-mesa
+
 ENV DISPLAY :0
 
 ENTRYPOINT ["/usr/local/bin/EmptyEpsilon"]

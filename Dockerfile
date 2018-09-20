@@ -27,22 +27,10 @@ COPY --from=build /usr/local/share/emptyepsilon/ /usr/local/share/emptyepsilon/
 RUN apt-get update
 RUN apt-get install -yqq libsfml-dev libglu1-mesa
 
-RUN echo "default-server = unix:/run/user/0/pulse/native \n autospawn = no \n daemon-binary = /bin/true \n enable-shm = false" > /etc/pulse/client.conf
+RUN echo "default-server = unix:/run/user/1000/pulse/native \n autospawn = no \n daemon-binary = /bin/true \n enable-shm = false" > /etc/pulse/client.conf
 
-ENV UNAME ee
-
-# Set up the user
-RUN export UNAME=$UNAME UID=1000 GID=1000 && \
-  mkdir -p "/home/${UNAME}" && \
-  echo "${UNAME}:x:${UID}:${GID}:${UNAME} User,,,:/home/${UNAME}:/bin/bash" >> /etc/passwd && \
-  echo "${UNAME}:x:${UID}:" >> /etc/group && \
-  mkdir -p /etc/sudoers.d && \
-  echo "${UNAME} ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/${UNAME} && \
-  chmod 0440 /etc/sudoers.d/${UNAME} && \
-  chown ${UID}:${GID} -R /home/${UNAME} && \
-  gpasswd -a ${UNAME} audio
-
-USER $UNAME
+RUN useradd -u 1000 -G audio ee
+USER ee
 
 ENV DISPLAY :0
 
